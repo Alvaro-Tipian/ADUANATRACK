@@ -1,0 +1,78 @@
+﻿Tipo,Código,Title,Épica Asociada,HU Asociada,Capa / Componente,Story Points,Horas Estimadas,Prioridad,Responsable Asignado,Sprint,Body
+Épica,EP00,ÉPICA 0: Construir Plataforma Base y Entornos DevSecOps,EP00,SETUP,DevOps,0,17,ALTA,Fabio Saavedra,Sprint 1,"Configuración de repositorios GitFlow, docker-compose multi-servicio, PostgreSQL 15 DDL, CI GitHub Actions y SAST SonarQube."
+Épica,EP01,"ÉPICA 1: Autenticación, Seguridad y Control de Acceso",EP01,HU01,Seguridad/Auth,3,12,ALTA,Patrick Ponce,Sprint 1,"Módulo de autenticación segura con JWT, encriptación bcrypt, bitácora de auditoría y bloqueo de fuerza bruta. (HU01 · 3 SP)"
+Épica,EP02,ÉPICA 2: Gestión del Directorio de Clientes Importadores,EP02,HU04,Directorio/Clientes,5,20,ALTA,Patrick Ponce,Sprint 1,"Padrón maestro de importadores con validación RUC módulo 11, almacenamiento PDF de carta poder y alertas de caducidad. (HU04 · 5 SP)"
+Épica,EP03,ÉPICA 3: Apertura y Control del Despacho Aduanero,EP03,HU03,Core Aduanero,5,20,ALTA,Patrick Ponce,Sprint 1,"Apertura formal de expediente con correlativo atómico DESP-YYYY-XXXX, catálogos SUNAT y estado apertura. (HU03 · 5 SP)"
+Épica,EP04,ÉPICA 4: Trazabilidad de Transporte Marítimo y Contenedores,EP04,HU05,Operaciones BL,5,20,ALTA,Patrick Ponce,Sprint 1,"Registro de conocimiento BL, norma ISO 6346 para contenedores y recálculo automático de almacenaje temporal. (HU05 · 5 SP)"
+Épica,EP05,ÉPICA 5: Monitoreo Operativo y Tablero de Control,EP05,HU02,Dashboard/KPIs,5,20,MEDIA,Kiara Linares,Sprint 1,"Dashboard en tiempo real con tarjetas KPI métricas, tabla dinámica ordenada por ETA y exportador Excel. (HU02 · 5 SP)"
+Épica,EP06,ÉPICA 6: Gestión Documental y Expediente Digital,EP06,HU06,Documentos,8,30,ALTA,Patrick Ponce,Sprint 2,"Carga y validación de factura comercial, packing list y BL en PDF cifrado con visor integrado."
+Épica,EP07,ÉPICA 7: Clasificación Arancelaria y Liquidación Tributaria,EP07,"HU07, 08",Tributación,16,60,ALTA,Patrick Ponce,Sprint 2,"Subpartidas nacionales de 10 dígitos y cálculo automatizado de Ad-Valorem, IGV e IPM sobre valor CIF."
+Épica,EP08,ÉPICA 8: Destinación Aduanera y Asignación de Canal SUNAT,EP08,"HU09, 10",Trámites SUNAT,10,40,ALTA,Fabio Saavedra,Sprint 2,"Numeración formal DAM con Clave SOL y seguimiento de canal asignado (Verde, Naranja, Rojo)."
+Épica,EP09,"ÉPICA 9: Diligencias Portuarias, Inspección y Levante",EP09,HU11..13,Puerto/Almacén,15,50,ALTA,Fabio Saavedra,Sprint 3,"Citas en depósito temporal, checklist de aforo físico y registro de levante de mercancía."
+Épica,EP10,ÉPICA 10: Notificaciones Automáticas y Analítica Gerencial,EP10,"HU14, 15",Analítica/Alertas,13,45,MEDIA,Kiara Linares,Sprint 3,Alertas preventivas de sobrestadía portuaria e indicadores de gestión operativa para toma de decisiones.
+Historia de Usuario,HU01,HU01_Iniciar sesión en el sistema,EP01,HU01,Auth / Frontend / Backend,3,12,ALTA,Patrick Ponce / Kiara Linares,Sprint 1,"Como Usuario del sistema (Agente/Admin/Cliente), Quiero autenticarme con credenciales seguras y protección de intentos, Para acceder a las funcionalidades del sistema según los permisos de mi rol operativo.
+
+Criterios de Aceptación Gherkin (BDD):
+1. Escenario 1 (Login Exitoso): Dado un usuario registrado, cuando ingresa credenciales válidas, entonces el sistema genera un token JWT y redirige al dashboard.
+2. Escenario 2 (Credenciales Erradas): Dado un usuario, cuando ingresa clave incorrecta, entonces muestra mensaje de error sin revelar la existencia del usuario.
+3. Escenario 3 (Bloqueo por Fuerza Bruta): Dado un usuario con 3 fallos consecutivos, cuando intenta ingresar por 4ta vez, entonces bloquea la cuenta por 15 min.
+4. Escenario 4 (Bitácora): Dado un intento de acceso, cuando se procesa la petición, entonces guarda IP, User-Agent y timestamp en audit_auth_logs."
+Historia de Usuario,HU04,HU04_Registrar datos del cliente importador,EP02,HU04,Directorio / Backend / UI,5,20,ALTA,Patrick Ponce / Kiara Linares,Sprint 1,"Como Administrador o agente de aduana, Quiero registrar y mantener actualizado el padrón de clientes importadores, Para vincular al importador a sus despachos y controlar las cartas poder vigentes.
+
+Criterios de Aceptación Gherkin (BDD):
+1. Escenario 1 (RUC Válido): Dado un formulario de cliente, cuando ingresa RUC de 11 dígitos válido (módulo 11), entonces guarda los datos en BD.
+2. Escenario 2 (RUC Duplicado): Dado un RUC ya existente, cuando intenta registrarlo, entonces emite alerta 409 Conflict.
+3. Escenario 3 (Carta Poder PDF): Dado un archivo PDF de carta poder <= 10MB, cuando se carga, entonces valida firma mágica y guarda con UUID.
+4. Escenario 4 (Alerta Vencimiento): Dado un cliente con poder próximo a vencer (<15 días), cuando se consulta la grilla, entonces muestra badge de alerta amarillo."
+Historia de Usuario,HU03,HU03_Registrar nuevo despacho de importación,EP03,HU03,Core / Backend / UI,5,20,ALTA,Patrick Ponce / Kiara Linares,Sprint 1,"Como Agente de aduana, Quiero aperturar formalmente el expediente operativo de importación, Para generar el código correlativo atómico e iniciar el trámite aduanero.
+
+Criterios de Aceptación Gherkin (BDD):
+1. Escenario 1 (Carta Poder Vigente): Dado un importador con carta poder vigente, cuando completa datos de régimen 10 y aduana 118, entonces genera DESP-2026-XXXX atómico en estado Apertura.
+2. Escenario 2 (Bloqueo Poder Vencido): Dado un importador con carta poder caducada, cuando intenta registrar despacho, entonces bloquea el registro con error 422.
+3. Escenario 3 (Guardado Borrador): Dado el formulario guiado, cuando el agente decide pausar, entonces guarda en estado Borrador sin asignar correlativo definitivo.
+4. Escenario 4 (Hito Visual): Dado un despacho aperturado, cuando abre la ficha, entonces muestra la línea de tiempo con el hito Apertura resaltado."
+Historia de Usuario,HU05,HU05_Registrar información del embarque marítimo (BL),EP04,HU05,Embarques / Backend / UI,5,20,ALTA,Patrick Ponce / Kiara Linares / Fabio Saavedra,Sprint 1,"Como Agente de aduana, Quiero registrar datos del conocimiento de embarque (BL), nave y contenedores, Para controlar la travesía marítima, naviera y fecha límite de almacenaje en depósito.
+
+Criterios de Aceptación Gherkin (BDD):
+1. Escenario 1 (Código Contenedor ISO 6346): Dado un código de contenedor, cuando se ingresa, entonces el sistema valida la clave de propietario y el dígito verificador matemático.
+2. Escenario 2 (Coherencia Temporal): Dado las fechas de zarpe y ETA, cuando zarpe >= ETA, entonces muestra error de consistencia temporal.
+3. Escenario 3 (Recálculo Almacenaje): Dado una modificación en el ETA marítimo, cuando se actualiza, entonces recalcula automáticamente los 30 días libres de almacenaje.
+4. Escenario 4 (Multi-contenedor): Dado un despacho FCL, cuando ingresa lista de contenedores y precintos, entonces vincula todos los ítems al BL."
+Historia de Usuario,HU02,HU02_Visualizar panel de seguimiento de despachos (Dashboard),EP05,HU02,Dashboard / UI / Analytics,5,20,MEDIA,Kiara Linares / Fabio Saavedra,Sprint 1,"Como Agente de aduana, Quiero visualizar métricas en tiempo real y el listado de despachos en curso, Para monitorear el avance global de operaciones e identificar alertas oportunamente.
+
+Criterios de Aceptación Gherkin (BDD):
+1. Escenario 1 (Tarjetas KPI): Dado el usuario autenticado, cuando ingresa al dashboard, entonces carga contadores de despachos activos, alertas y canales.
+2. Escenario 2 (Ordenamiento por ETA): Dado la grilla de despachos, cuando renderiza la tabla, entonces muestra los registros ordenados por fecha estimada de arribo más próxima.
+3. Escenario 3 (Filtros Multicriterio): Dado el selector de aduana y cliente, cuando aplica filtro, entonces actualiza la grilla en tiempo real sin recargar página.
+4. Escenario 4 (Exportación Excel): Dado el listado filtrado, cuando presiona Exportar, entonces emite archivo .xlsx con el detalle completo del expediente."
+Tarea Técnica,HT01,HT01_Configurar repositorio Git bajo GitFlow y reglas branch protection,EP00,SETUP,DevOps,0,2,ALTA,Fabio Saavedra,Sprint 1,"Inicialización de repositorio GitHub bajo GitFlow (main, develop, feature/*), reglas de branch protection e invitación a jhuapalla@usmp.pe."
+Tarea Técnica,HT02,HT02_Parametrizar tablero Kanban en Jira/Trello con flujo aduanero,EP00,SETUP,CASE,0,1,ALTA,Alvaro Tipian,Sprint 1,"Configuración de tablero Kanban con 7 estados aduaneros, límites WIP (máx 2 por dev) e invitación a jhuapallag@usmp.pe."
+Tarea Técnica,HT03,HT03_Construir arquitectura contenerizada docker-compose multi-servicio,EP00,SETUP,DevOps,0,4,ALTA,Patrick Ponce,Sprint 1,"docker-compose.yml con contenedores de API Node.js/Spring Boot, PostgreSQL 15 Alpine, volúmenes persistentes y red aislada."
+Tarea Técnica,HT04,HT04_Diseñar e implementar scripts DDL en PostgreSQL con auditoría,EP00,SETUP,Base Datos,0,5,ALTA,Fabio Saavedra,Sprint 1,"Scripts DDL en PostgreSQL con FKs, índices B-Tree, constraints y triggers para audit_auth_logs y audit_importadores."
+Tarea Técnica,HT05,HT05_Construir pipeline CI en GitHub Actions para compilación y linter,EP00,SETUP,DevOps,0,3,ALTA,Patrick Ponce,Sprint 1,"Pipeline CI en .github/workflows/ci.yml con jobs para npm ci, ESLint y suite de pruebas unitarias automatizadas."
+Tarea Técnica,HT06,HT06_Configurar escaneo estático de seguridad SAST con SonarQube/Snyk,EP00,SETUP,QA/Seguridad,0,2,ALTA,Fabio Saavedra,Sprint 1,Parametrización de Quality Gate en SonarQube Cloud / Snyk con política de 0 vulnerabilidades críticas.
+Tarea Técnica,HT07,HT07_Desarrollar endpoint POST /api/v1/auth/login con bcrypt y JWT,EP01,HU01,Backend,0,4,ALTA,Patrick Ponce,Sprint 1,"Endpoint POST /api/v1/auth/login, bcrypt salt 10, JWT HMAC-SHA256 (2h) y bloqueo de 15 min al 3er fallo."
+Tarea Técnica,HT08,HT08_Implementar middleware e inserción en tabla audit_auth_logs,EP01,HU01,Backend,0,3,ALTA,Fabio Saavedra,Sprint 1,"Middleware de auditoría para guardar IP, User-Agent, timestamp UTC y estado en audit_auth_logs."
+Tarea Técnica,HT09,HT09_Maquetar vista SPA reactiva de login con validación regex,EP01,HU01,Frontend,0,4,ALTA,Kiara Linares,Sprint 1,"Interfaz login SPA reactiva con regex en tiempo real, Context de React y persistencia de sesión activa."
+Tarea Técnica,HT10,HT10_Ejecutar suite de pruebas unitarias automatizadas BDD de HU01,EP01,HU01,QA,0,1,ALTA,Fabio Saavedra,Sprint 1,Pruebas automatizadas en Jest cubriendo los 4 criterios de aceptación Gherkin de la HU01.
+Tarea Técnica,HT11,HT11_Modelar entidad Cliente y API REST con validación RUC módulo 11,EP02,HU04,Backend,0,5,ALTA,Patrick Ponce,Sprint 1,POST/PUT /api/v1/importadores con validación matemática de RUC 11 dígitos por módulo 11 y unicidad en BD.
+Tarea Técnica,HT12,HT12_Implementar servicio multipart para carga de carta poder PDF,EP02,HU04,Backend,0,5,ALTA,Fabio Saavedra,Sprint 1,"Servicio multipart/form-data para carga de PDF <= 10MB, firma mágica, UUID y cálculo de vencimiento."
+Tarea Técnica,HT13,HT13_Configurar auditoría histórica JSON en audit_importadores,EP02,HU04,Backend,0,3,ALTA,Patrick Ponce,Sprint 1,Trigger/interceptor para registrar snapshot JSON del cambio de razón social/dirección en audit_importadores.
+Tarea Técnica,HT14,HT14_Construir componente frontend para alta/edición de importadores,EP02,HU04,Frontend,0,5,ALTA,Kiara Linares,Sprint 1,"Formulario reactivo modal con validación asíncrona de RUC duplicado, dropzone PDF y visor previo."
+Tarea Técnica,HT15,HT15_Diseñar y ejecutar pruebas funcionales y de límites de HU04,EP02,HU04,QA,0,2,ALTA,Kiara Linares,Sprint 1,"Suite de pruebas de QA verificando RUC inválido, archivos no PDF, alertas de caducidad <15 días."
+Tarea Técnica,HT16,HT16_Implementar generador atómico transaccional de correlativo DESP,EP03,HU03,Backend,0,4,ALTA,Patrick Ponce,Sprint 1,Generador concurrente de correlativo DESP-YYYY-XXXX con secuencias PostgreSQL en nivel READ COMMITTED.
+Tarea Técnica,HT17,HT17_Crear tablas maestras e endpoints de regímenes y aduana 118,EP03,HU03,Backend,0,3,ALTA,Fabio Saavedra,Sprint 1,Endpoints GET para catálogo de regímenes SUNAT (Régimen 10) e intendencia marítima del Callao 118.
+Tarea Técnica,HT18,HT18_Desarrollar middleware de verificación de carta poder vigente,EP03,HU03,Backend,0,3,ALTA,Patrick Ponce,Sprint 1,Middleware que bloquea la apertura del despacho (error 422) si el importador tiene la carta poder vencida.
+Tarea Técnica,HT19,HT19_Construir Stepper Wizard frontend para creación de despacho,EP03,HU03,Frontend,0,6,ALTA,Kiara Linares,Sprint 1,"Interfaz guiada paso a paso (importador, régimen 10, aduana Callao 118) con opción borrador o apertura."
+Tarea Técnica,HT20,HT20_Implementar badge visual de estado operativo e hito Apertura,EP03,HU03,Frontend,0,2,ALTA,Kiara Linares,Sprint 1,Componente visual de línea de tiempo y badge de estado en cabecera del expediente aduanero.
+Tarea Técnica,HT21,HT21_Ejecutar pruebas automatizadas de integración para HU03,EP03,HU03,QA,0,2,ALTA,Fabio Saavedra,Sprint 1,Pruebas de integración verificando la atomaticidad del correlativo y los 4 criterios Gherkin de HU03.
+Tarea Técnica,HT22,HT22_Desarrollar endpoint GET /api/v1/dashboard/kpis optimizado,EP05,HU02,Backend,0,5,MEDIA,Fabio Saavedra,Sprint 1,Endpoint GET /dashboard/kpis con consultas SQL agregadas con FILTER e índices B-Tree en estado y ETA.
+Tarea Técnica,HT23,HT23_Implementar filtros dinámicos y exportador a Excel (.xlsx),EP05,HU02,Backend,0,4,MEDIA,Patrick Ponce,Sprint 1,Servicio de filtrado dinámico por cliente/aduana/rango de fechas y exportación directa del listado a XLSX.
+Tarea Técnica,HT24,HT24_Maquetar vista de Dashboard con tarjetas KPI y grilla por ETA,EP05,HU02,Frontend,0,6,MEDIA,Kiara Linares,Sprint 1,Dashboard operativo responsivo con grilla paginada ordenada por fecha de arribo ETA más próxima.
+Tarea Técnica,HT25,HT25_Configurar enrutamiento SPA contextual hacia detalle de despacho,EP05,HU02,Frontend,0,3,MEDIA,Kiara Linares,Sprint 1,Enrutamiento dinámico preservando parámetros de búsqueda en la URL para navegación directa a la ficha.
+Tarea Técnica,HT26,HT26_Ejecutar pruebas de rendimiento y volumetría en Dashboard,EP05,HU02,QA,0,2,MEDIA,Fabio Saavedra,Sprint 1,"Pruebas de carga con dataset de 1,000 despachos garantizando respuesta y renderizado < 500 ms."
+Tarea Técnica,HT27,HT27_Modelar entidades DDL embarques_maritimos y detalle_contenedores,EP04,HU05,Backend,0,4,ALTA,Patrick Ponce,Sprint 1,"DDL de tablas embarques_maritimos y detalle_contenedores con FK al despacho, modalidad FCL/LCL y datos de BL."
+Tarea Técnica,HT28,HT28_Implementar algoritmo de validación de contenedores ISO 6346,EP04,HU05,Backend,0,4,ALTA,Fabio Saavedra,Sprint 1,"Algoritmo de comprobación matemática de clave de propietario, categoría U y dígito verificador bajo ISO 6346."
+Tarea Técnica,HT29,HT29_Desarrollar servicio de recálculo automático de almacenaje,EP04,HU05,Backend,0,4,ALTA,Patrick Ponce,Sprint 1,Recálculo automático de la fecha límite de almacenaje (30 días desde ETA) y emisión de alertas preventivas.
+Tarea Técnica,HT30,HT30_Construir UI para datos marítimos y sub-tabla de contenedores,EP04,HU05,Frontend,0,6,ALTA,Kiara Linares,Sprint 1,Interfaz para ingreso de datos de BL y sub-tabla reactiva para agregar/eliminar múltiples contenedores y precintos.
+Tarea Técnica,HT31,HT31_Ejecutar suite de pruebas funcionales para embarque BL en HU05,EP04,HU05,QA,0,2,ALTA,Fabio Saavedra,Sprint 1,"Suite de QA verificando regla de zarpe < ETA, códigos de contenedor ISO 6346 y recálculo de almacenaje."
