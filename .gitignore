@@ -1,4 +1,4 @@
-# Documentos de Oficina y Medios (Excluidos del repositorio)
+# Documentos de Oficina, Medios y Guiones (Excluidos del repositorio)
 *.docx
 *.xlsx
 *.pptx
@@ -6,6 +6,8 @@
 *.jpeg
 *.jpg
 *.png
+*.md
+!README.md
 
 # IDE y Archivos de Entorno
 .vscode/
@@ -23,3 +25,4 @@ bin/
 obj/
 target/
 .env
+*.db
