@@ -1,0 +1,25 @@
+# Documentos de Oficina y Medios (Excluidos del repositorio)
+*.docx
+*.xlsx
+*.pptx
+*.pdf
+*.jpeg
+*.jpg
+*.png
+
+# IDE y Archivos de Entorno
+.vscode/
+.idea/
+*.log
+__pycache__/
+*.pyc
+.DS_Store
+
+# Dependencias y compilados (Node, C#, Java, Python)
+node_modules/
+dist/
+build/
+bin/
+obj/
+target/
+.env
